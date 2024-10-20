@@ -5,18 +5,18 @@ Module for calculating minimum operations to achieve n 'H' characters.
 
 def minOperations(n):
     """
-    Calculates the fewest number of operations needed to result in exactly n 'H'
-    characters in a file.
+    Calculates the fewest number of operations needed to result in exactly n H
+    characters in the file.
 
     Args:
-    n (int): The desired number of 'H' characters.
+    n (int): The desired number of H characters.
 
     Returns:
     int: The minimum number of operations needed, or 0 if n is impossible to achieve.
     """
-    if n <= 1:
+    if not isinstance(n, int) or n <= 1:
         return 0
-    
+
     operations = 0
     divisor = 2
 
@@ -25,5 +25,10 @@ def minOperations(n):
             operations += divisor
             n //= divisor
         divisor += 1
+
+        if divisor * divisor > n:
+            if n > 1:
+                operations += n
+            break
 
     return operations
