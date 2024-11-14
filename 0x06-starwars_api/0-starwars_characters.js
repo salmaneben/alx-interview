@@ -2,52 +2,35 @@
 
 const request = require('request');
 
+if (process.argv.length !== 3) {
+  process.exit(1);
+}
+
 const movieId = process.argv[2];
-const filmEndPoint = 'https://swapi-api.hbtn.io/api/films/' + movieId;
-let people = [];
-const names = [];
+const url = `https://swapi-api.alx-tools.com/api/films/${movieId}`;
 
-const requestCharacters = async () => {
-  await new Promise(resolve => request(filmEndPoint, (err, res, body) => {
-    if (err || res.statusCode !== 200) {
-      console.error('Error: ', err, '| StatusCode: ', res.statusCode);
-    } else {
-      const jsonBody = JSON.parse(body);
-      people = jsonBody.characters;
-      resolve();
-    }
-  }));
-};
-
-const requestNames = async () => {
-  if (people.length > 0) {
-    for (const p of people) {
-      await new Promise(resolve => request(p, (err, res, body) => {
-        if (err || res.statusCode !== 200) {
-          console.error('Error: ', err, '| StatusCode: ', res.statusCode);
-        } else {
-          const jsonBody = JSON.parse(body);
-          names.push(jsonBody.name);
-          resolve();
-        }
-      }));
-    }
-  } else {
-    console.error('Error: Got no Characters for some reason');
+request(url, (error, response, body) => {
+  if (error) {
+    console.error(error);
+    return;
   }
-};
 
-const getCharNames = async () => {
-  await requestCharacters();
-  await requestNames();
+  const characters = JSON.parse(body).characters;
+  printCharacters(characters, 0);
+});
 
-  for (const n of names) {
-    if (n === names[names.length - 1]) {
-      process.stdout.write(n);
-    } else {
-      process.stdout.write(n + '\n');
-    }
+function printCharacters (characters, index) {
+  if (index === characters.length) {
+    return;
   }
-};
 
-getCharNames();
+  request(characters[index], (error, response, body) => {
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    console.log(JSON.parse(body).name);
+    printCharacters(characters, index + 1);
+  });
+}
