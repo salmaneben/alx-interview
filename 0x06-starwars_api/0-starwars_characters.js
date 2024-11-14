@@ -4,29 +4,27 @@ const request = require('request');
 
 const movieId = process.argv[2];
 const filmEndPoint = 'https://swapi-api.hbtn.io/api/films/' + movieId;
-let characters = [];
+let people = [];
 const names = [];
 
-// Function to fetch movie characters
 const requestCharacters = async () => {
-  await new Promise((resolve, reject) => request(filmEndPoint, (err, res, body) => {
+  await new Promise(resolve => request(filmEndPoint, (err, res, body) => {
     if (err || res.statusCode !== 200) {
-      reject(new Error(`Error: ${err} | StatusCode: ${res?.statusCode}`));
+      console.error('Error: ', err, '| StatusCode: ', res.statusCode);
     } else {
       const jsonBody = JSON.parse(body);
-      characters = jsonBody.characters;
+      people = jsonBody.characters;
       resolve();
     }
   }));
 };
 
-// Function to fetch character names
 const requestNames = async () => {
-  if (characters.length > 0) {
-    for (const character of characters) {
-      await new Promise((resolve, reject) => request(character, (err, res, body) => {
+  if (people.length > 0) {
+    for (const p of people) {
+      await new Promise(resolve => request(p, (err, res, body) => {
         if (err || res.statusCode !== 200) {
-          reject(new Error(`Error: ${err} | StatusCode: ${res?.statusCode}`));
+          console.error('Error: ', err, '| StatusCode: ', res.statusCode);
         } else {
           const jsonBody = JSON.parse(body);
           names.push(jsonBody.name);
@@ -35,28 +33,21 @@ const requestNames = async () => {
       }));
     }
   } else {
-    throw new Error('Error: No characters found');
+    console.error('Error: Got no Characters for some reason');
   }
 };
 
-// Main function to get and print character names
 const getCharNames = async () => {
-  try {
-    await requestCharacters();
-    await requestNames();
+  await requestCharacters();
+  await requestNames();
 
-    names.forEach((name, index) => {
-      if (index === names.length - 1) {
-        process.stdout.write(name);
-      } else {
-        process.stdout.write(name + '\n');
-      }
-    });
-  } catch (error) {
-    console.error(error.message);
-    process.exit(1);
+  for (const n of names) {
+    if (n === names[names.length - 1]) {
+      process.stdout.write(n);
+    } else {
+      process.stdout.write(n + '\n');
+    }
   }
 };
 
-// Execute the main function
 getCharNames();
