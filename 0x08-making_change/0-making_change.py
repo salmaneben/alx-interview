@@ -1,25 +1,25 @@
 #!/usr/bin/python3
-"""
-Making Change
-"""
+""" Making changes """
 
 
 def makeChange(coins, total):
-    """
-    Return the minimum number of coins needed to meet total
+    """ Generate changes needed to reach total
+
+    Args:
+        coins ([List]): [List of Coins available]
+        total ([int]): [total amount needed]
     """
     if total <= 0:
         return 0
-
-    temp = [float('inf')] * (total + 1)
-    temp[0] = 0
-
-    for coin in coins:
-        for i in range(coin, total + 1):
-            if temp[i - coin] != float('inf'):
-                temp[i] = min(temp[i], temp[i - coin] + 1)
-
-    if temp[total] == float('inf'):
-        return -1
-
-    return temp[total]
+    check = 0
+    temp = 0
+    coins.sort(reverse=True)
+    for i in coins:
+        while check < total:
+            check += i
+            temp += 1
+        if check == total:
+            return temp
+        check -= i
+        temp -= 1
+    return -1
