@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """
-Making Change Solution
+Making Change
 """
 
 
 def makeChange(coins, total):
     """
-    Calculate the fewest number of coins needed to meet a given amount
+    Return the minimum number of coins needed to meet total
     """
     if total <= 0:
         return 0
@@ -14,17 +14,18 @@ def makeChange(coins, total):
     if not coins:
         return -1
 
-    # Initialize array to store minimum coins needed for each amount
-    dp = [float('inf')] * (total + 1)
-    dp[0] = 0
+    coins.sort(reverse=True)
+    count = 0
+    remaining = total
 
-    # For each amount from 1 to total
-    for amount in range(1, total + 1):
-        # Try each coin
-        for coin in coins:
-            if coin <= amount:
-                # Update if we can get a better result using this coin
-                if dp[amount - coin] != float('inf'):
-                    dp[amount] = min(dp[amount], dp[amount - coin] + 1)
+    for coin in coins:
+        if coin <= 0:
+            continue
+        while remaining >= coin:
+            count += remaining // coin
+            remaining = remaining % coin
 
-    return dp[total] if dp[total] != float('inf') else -1
+        if remaining == 0:
+            return count
+
+    return -1
