@@ -1,42 +1,62 @@
+#!/usr/bin/python3
+'''0x09. Island Perimeter'''
+
+
 def island_perimeter(grid):
-    """
-    Calculate the perimeter of the island in the given grid.
-    
-    Args:
-    grid (List[List[int]]): A 2D grid where 0 represents water and 1 represents land.
-    
-    Returns:
-    int: The perimeter of the island.
-    """
-    perimeter = 0
-    rows = len(grid)
-    cols = len(grid[0])
-    
-    for r in range(rows):
-        for c in range(cols):
-            # Check if current cell is land
-            if grid[r][c] == 1:
-                # Start with 4 sides
-                cell_perimeter = 4
-                
-                # Check adjacent cells and subtract sides that touch land
-                # Check cell above
-                if r > 0 and grid[r-1][c] == 1:
-                    cell_perimeter -= 1
-                
-                # Check cell below
-                if r < rows - 1 and grid[r+1][c] == 1:
-                    cell_perimeter -= 1
-                
-                # Check cell to the left
-                if c > 0 and grid[r][c-1] == 1:
-                    cell_perimeter -= 1
-                
-                # Check cell to the right
-                if c < cols - 1 and grid[r][c+1] == 1:
-                    cell_perimeter -= 1
-                
-                # Add this cell's perimeter to total
-                perimeter += cell_perimeter
-    
-    return perimeter
+    '''returns the perimeter of the island described in grid'''
+    counter = 0
+    grid_max = len(grid) - 1  # index of the last list in the grid
+    lst_max = len(grid[0]) - 1  # index of the last square in list
+
+    for lst_idx, lst in enumerate(grid):
+        for land_idx, land in enumerate(lst):
+            if land == 1:
+                # left and right
+                if land_idx == 0:
+                    # left side
+                    counter += 1
+
+                    # right side
+                    if lst[land_idx + 1] == 0:
+                        counter += 1
+                elif land_idx == lst_max:
+                    # left side
+                    if lst[land_idx - 1] == 0:
+                        counter += 1
+
+                    # right side
+                    counter += 1
+                else:
+                    # left side
+                    if lst[land_idx - 1] == 0:
+                        counter += 1
+
+                    # right side
+                    if lst[land_idx + 1] == 0:
+                        counter += 1
+
+                # top and down
+                if lst_idx == 0:
+                    # top side
+                    counter += 1
+
+                    # bottom side
+                    if grid[lst_idx + 1][land_idx] == 0:
+                        counter += 1
+                elif lst_idx == grid_max:
+                    # top side
+                    if grid[lst_idx - 1][land_idx] == 0:
+                        counter += 1
+
+                    # bottom side
+                    counter += 1
+                else:
+                    # top side
+                    if grid[lst_idx - 1][land_idx] == 0:
+                        counter += 1
+
+                    # bottom side
+                    if grid[lst_idx + 1][land_idx] == 0:
+                        counter += 1
+
+    return counter
