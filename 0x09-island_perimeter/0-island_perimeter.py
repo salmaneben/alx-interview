@@ -1,45 +1,25 @@
 #!/usr/bin/python3
 """
-Function to calculate island perimeter
+Contains island perimeter function
 """
 
 
 def island_perimeter(grid):
     """
-    Calculate the perimeter of the island where:
-    0 represents a water zone
-    1 represents a land zone
+    Returns the perimeter of the island described in grid
     """
-    perimeter = 0
     rows = len(grid)
     cols = len(grid[0])
+    perimeter = 0
 
-    for i in range(rows):
-        for j in range(cols):
-            if grid[i][j] == 1:
-                # Check all 4 sides
-                # Left side
-                if j == 0:
-                    perimeter += 1
-                elif grid[i][j-1] == 0:
-                    perimeter += 1
-                
-                # Right side
-                if j == cols-1:
-                    perimeter += 1
-                elif grid[i][j+1] == 0:
-                    perimeter += 1
-                
-                # Top side
-                if i == 0:
-                    perimeter += 1
-                elif grid[i-1][j] == 0:
-                    perimeter += 1
-                
-                # Bottom side
-                if i == rows-1:
-                    perimeter += 1
-                elif grid[i+1][j] == 0:
-                    perimeter += 1
+    for row in range(rows):
+        for col in range(cols):
+            if grid[row][col] == 1:
+                perimeter += 4
+                # subtract 2 for every internal edge
+                if row > 0 and grid[row - 1][col] == 1:
+                    perimeter -= 2
+                if col > 0 and grid[row][col - 1] == 1:
+                    perimeter -= 2
 
     return perimeter
